@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export async function POST(req) {
   const body = await req.json();
-  const { user, accessToken } = body;
+  const { accessToken } = body;
 
   try {
     const decoded = jwt.verify(accessToken, process.env.PI_API_SECRET);
@@ -10,8 +10,7 @@ export async function POST(req) {
     return Response.json({
       ok: true,
       message: "JWT verified",
-      decoded,
-      user
+      decoded
     });
   } catch (err) {
     return Response.json({
