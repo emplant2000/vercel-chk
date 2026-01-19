@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { Pi } from "@pi-network/pi-sdk";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [piLoaded, setPiLoaded] = useState(false);
   const [user, setUser] = useState(null);
   const [verified, setVerified] = useState(null);
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://sdk.minepi.com/pi-sdk.js";
+    script.onload = () => setPiLoaded(true);
+    document.body.appendChild(script);
+  }, []);
+
   const login = async () => {
+    if (!piLoaded) return alert("Pi SDK loading...");
+
     const scopes = ["username", "payments"];
-    const auth = await Pi.authenticate(scopes);
+    const auth = await window.Pi.authenticate(scopes);
 
     setUser(auth.user);
 
@@ -25,7 +34,7 @@ export default function Home() {
 
   return (
     <main style={{ padding: 40 }}>
-      <h1>PiSDK Vercel Demo</h1>
+      <h1>PiSDK Vercel Demo (CDN版)</h1>
 
       <button onClick={login} style={{ padding: 10, fontSize: 18 }}>
         Login with Pi
